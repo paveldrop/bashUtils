@@ -2,13 +2,13 @@
 #include <string.h>
 #include <getopt.h>
 
-// typedef struct {
-//     int b;
-//     int e;
-//     int s;
-//     int t;
-//     int n;
-// } flags;
+typedef struct {
+    int b = 0;
+    int e = 0;
+    int s = 0;
+    int t = 0;
+    int n = 0;
+} flags;
 
 FILE *fp;
 

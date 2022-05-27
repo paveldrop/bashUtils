@@ -1,28 +1,41 @@
 #include "s21_cat.h"
 
-// typedef struct {
-//     int b;
-//     int e;
+// struct fl {
+//     int b = 0;
+//     int e ;
 //     int s;
 //     int t;
 //     int n;
 // } flags;
 
+    struct option long_options[] =
+{
+    {"b", required_argument, b, 1},
+    {"e", required_argument, e, 2},
+    {"s", required_argument, s, 3},
+    {"t", required_argument, t, 4},
+    {"n", required_argument, n, 5},
+    {NULL, 0, NULL, 0}
+};
+
+
+
 void FileReader(int argc, char *argv[]);
-void GetOptions(int argc, char *argv[]);
+void GetOptions(int argc, char *argv[], struct option flags);
 
 // void ParseFlags(int argc, char* argv[], flags form);
 
 int main(int argc, char* argv[]) {
-    // int fl_b = 0;
-    // int fl_e = 0;
-    // int fl_s = 0;
-    // int fl_t = 0;
-    // int fl_n = 0;
+    
+    int b = 0;
+    int e = 0;
+    int s = 0;
+    int t = 0;
+    int n = 0;
 
-    // const char *short_options = "bestn";
+    struct option flags;
 
-    GetOptions(argc, argv);
+    GetOptions(argc, argv, flags);
     FileReader(argc, argv);
     return 0;
 }
@@ -39,30 +52,33 @@ void FileReader(int argc, char *argv[]) {
     fclose(fp);
 }
 
-void GetOptions(int argc, char **argv) {
+void GetOptions(int argc, char **argv, struct option flags) {
 
     extern char *optarg;
-    int total = getopt(argc, argv, "be::s::t::n:");
+    int total = getopt_long(argc, argv, "b:e:s:t:n:", long_options, NULL);
 
     while (total != -1) {
         switch (total)
         {
         case 'b':
+            flags.b = optarg;
             printf("found argument \"b = %s\".\n", optarg);
             break;
         case 'e':
+            flags.e = optarg;
             printf("found argument \"e = %s\".\n", optarg);
             break;
         case 's':
+            flags.s = optarg;
             printf("found argument \"s = %s\".\n", optarg);
             break;
         case 't':
+            flags.t = optarg;
             printf("found argument \"t = %s\".\n", optarg);
             break;
         case 'n':
+            flags.n = optarg;
             printf("found argument \"n = %s\".\n", optarg);
-            break;
-        default:
             break;
         }
     }
