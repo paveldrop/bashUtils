@@ -138,9 +138,10 @@ void NumNonEmptyString(int argc, char *argv[]) {
 void AddDollar(int argc, char *argv[]) {
     fp = fopen(argv[argc - 1], "r+");
     char text[2048];
+    char doll[3] = "$";
     while(!feof(fp)) {
             fgets(text, 1000, fp);
-            strcat(text, "$___");
+            strcat(text, doll);
             printf("%s", text);
         }
     fclose (fp);
