@@ -3,18 +3,18 @@
 #include <getopt.h>
 
 typedef struct {
-    int b = 0;
-    int e = 0;
-    int s = 0;
-    int t = 0;
-    int n = 0;
+    int b;
+    int e;
+    int s;
+    int t;
+    int n;
 } flags;
 
 FILE *fp;
 
-#define no_argument            0  //  если НЕ имеем аргумент в командной строке
-#define required_argument      1  //  если имеем аргумент в командной строке
-#define optional_argument      2
+// #define no_argument            0  //  если НЕ имеем аргумент в командной строке
+// #define required_argument      1  //  если имеем аргумент в командной строке
+// #define optional_argument      2
 // const struct option long_options[] = {
 // 		{ "opt_b", no_argument, &flag_b, 1 },
 // 		{ "opt_e", no_argument, &flag_e, 10 },
