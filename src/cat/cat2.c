@@ -73,15 +73,13 @@ void GetOptions(int argc, char **argv) {
     while (total != -1) {
         switch (total)
         {
-        case 'b':
-            printf("found argument \"b = %s\".\n", optarg);
-            
+        case 'b':            
             opt.b += 1;
             NumNonEmptyString(argc, argv);
             total = -1;
             break;
         case 'e':
-            printf("found argument \"e = %s\".\n", optarg);
+
             opt.e += 1;
             AddDollar(argc, argv);
             total = -1;
@@ -145,6 +143,21 @@ void AddDollar(int argc, char *argv[]) {
             printf("%s", text);
         }
     fclose (fp);
+}
+
+void EmptyString(int argc, char *argv[]) {
+    fp = fopen(argv[argc - 1], "r+");
+    // char text[2048];
+    char future_char = '\n';
+    while((future_char = fgetc(fp)) != EOF) {
+        while(!feof(fp)) {
+            if(fgetc(fp) == '\n' && future_char == '\n') {
+                while(future_char == '\n') {
+                    future_char = getc(fp);
+                }
+            }
+        }
+    }
 }
 
 
