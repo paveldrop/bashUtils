@@ -1,29 +1,36 @@
+#ifndef SRC_CAT_S21_CAT_H_
+#define SRC_CAT_S21_CAT_H_
+
 #include <stdio.h>
 #include <string.h>
 #include <getopt.h>
 
-typedef struct {
+
+struct option_field{
     int b;
     int e;
     int s;
     int t;
     int n;
-} flags;
+    int v;
+};
 
-FILE *fp;
+static struct option long_options[] = {
+            { "number-nonblank", 0, 0, 'b'},
+            { "squeeze-blank", 0, 0, 's'},
+            { "number", 0, 0, 'n'},
+            { NULL, 0, NULL, 0}
+};
 
-// #define no_argument            0  //  если НЕ имеем аргумент в командной строке
-// #define required_argument      1  //  если имеем аргумент в командной строке
-// #define optional_argument      2
-// const struct option long_options[] = {
-// 		{ "opt_b", no_argument, &flag_b, 1 },
-// 		{ "opt_e", no_argument, &flag_e, 10 },
-// 		{ "opt_s", no_argument, &flag_s, -121 },
-//         { "opt_t", no_argument, &flag_t, -121 },
-//         { "opt_n", no_argument, &flag_n, -121 },
-// 		{ NULL, 0, NULL, 0}
-// 	};
+void GetOptions(int argc, char *argv[], struct option_field *opt);
+void StructToNull(struct option_field *opt);
+// void GetOptions(int argc, char **argv, char future_char, struct option_field *opt, char chr, int lookat, FILE*fp);
+void FlagsForRun(int argc, char **argv, struct option_field opt);
+void FlagPut(char total, struct option_field *opt);
+void EmptyString(char chr, char future_char, int *lookat, int *lift);
+void NumEveryString(int *count, char future_char);
+void NumNonEmptyString(char future_char, char chr, int *count);
+void AddDollar(char chr);
+void VisibleTab(char chr, int *lookat);
 
-
-//  void FileReader(int argc, char *argv[]);
-//  int getopt_long(int argc, char * const argv[], const char *optstring, const struct option *long_options, int *longindex);
+#endif // SRC_CAT_S21_CAT_H_

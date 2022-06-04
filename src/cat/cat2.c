@@ -1,163 +1,153 @@
-#include <stdio.h>
-#include <string.h>
-#include <getopt.h>
 #include "s21_cat.h"
 
-// FILE *fp;
-
-// #define no_argument            0  //  если НЕ имеем аргумент в командной строке
-// #define required_argument      1  //  если имеем аргумент в командной строке
-// #define optional_argument      2
-
-  
 
 
-void FileReader(int argc, char *argv[]);
-void GetOptions(int argc, char *argv[]);
-void NumEveryString(int argc, char *argv[]);
-void NumNonEmptyString(int argc, char *argv[]);
-int IfFileNotRun(int argc, char *argv[]);
-void IfFileFound(int argc, char *argv[]);
-void AddDollar(int argc, char *argv[]);
+// void InvisibleSymbols(char chr, int *print);
 
-int IfFileNotRun(int argc, char *argv[]) {
-    int r;
-    if (fp == NULL) {
-        perror("Такого файла не существует!");
-        r = -1;
-    } else {
-        r = 1;
-    }
-    return r;
-}
-
-void IfFileFound(int argc, char *argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-}
 
 int main(int argc, char* argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-    if((IfFileNotRun(argc, argv)) == 1) {
-            FileReader(argc, argv);
-            GetOptions(argc, argv);
-        }
+    struct option_field opt;
+    StructToNull(&opt);
+    GetOptions(argc, argv, &opt);
+    if (argc > 1) FlagsForRun(argc, argv, opt);
+
     return 0;
 }
 
-void FileReader(int argc, char *argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-    char text1[1024];
-    while (fgets(text1, 1024, fp) != NULL) {
-        printf("%s", text1);
-    }
-    fclose(fp);
-}
 
-void GetOptions(int argc, char **argv) {
-    flags opt;
-    opt.b = 0;
-    opt.e = 0;
-    opt.s = 0;
-    opt.t = 0;
-    opt.n = 0;
-    const char* short_options = "bestn";
-    struct option long_options[] = {
-		{ "number-nonblank", 0, 0, 'b'},
-		{ "squeeze-blank", 0, 0, 's'},
-        { "number", 0, 0, 'n'},
-		{ NULL, 0, NULL, 0}
-	};
+void GetOptions(int argc, char **argv, struct option_field *opt) {
+    // StructToNull(&opt);
+    // const char* short_options = "beEstn";
     int long_index = 0;
-    int total = getopt_long(argc, argv, short_options, long_options, &long_index);
+    int total = getopt_long(argc, argv, "beEstnv", long_options, &long_index);
 
     while (total != -1) {
-        switch (total)
-        {
-        case 'b':            
-            opt.b += 1;
-            NumNonEmptyString(argc, argv);
-            total = -1;
-            break;
-        case 'e':
+        FlagPut(total, opt);
+    }
+}
+void StructToNull(struct option_field *opt) {
+    opt->b = 0;
+    opt->e = 0;
+    opt->s = 0;
+    opt->t = 0;
+    opt->n = 0;
+    opt->v = 0;
+}
 
-            opt.e += 1;
-            AddDollar(argc, argv);
-            total = -1;
-            break;
-        case 's':
-            printf("found argument \"s = %s\".\n", optarg);
-            opt.s += 1;
-            break;
-        case 't':
-            printf("found argument \"t = %s\".\n", optarg);
-            opt.t += 1;
-            break;
-        case 'n':
-            opt.n += 1;
-            NumEveryString(argc, argv);
-            printf("found argument \"n = %s\".\n", optarg);
-            total = -1;
-            break;
-        default:
-            FileReader(argc, argv);
-            printf("cat [OPTION] [FILE]...");
-            break;
-        }
+void FlagPut(char total, struct option_field *opt) {
+    if (total == 'b') {
+        opt->b = total;
+    } else if (total == 'e') {
+        opt->v = 1;
+        opt->e = total;
+    } else if (total == 'n') {
+        opt->n = total;
+    } else if (total == 's') {
+        opt->s = total;
+    } else if (total == 't') {
+        opt->v = 1;
+        opt->t = total;
+    } else if (total == 'v') {
+        opt->v = total;
+    } else if (total == 'E') {
+        opt->e = total;
+    } else if (total == 'T') {
+        opt->t = total;
     }
 }
 
-
-void NumEveryString(int argc,  char *argv[]) {
-    IfFileNotRun(argc, argv);
-    char text[2048];
-    int n = 1;
-    while(!feof(fp)) {
-            fgets(text, 1000, fp);
-            printf("%6d %s", n++, text);
-        }
-    fclose (fp);
-}
-void NumNonEmptyString(int argc, char *argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-    char text[2048];
-    int n = 1;
-    while(!feof(fp)) {
-            fgets(text, 1000, fp);
-            if(strlen(text) > 1) {
-            printf("%6d %s", n++, text);
+void FlagsForRun(int argc, char **argv, struct option_field opt) {
+    FILE *fp;
+    char chr, future_char = '\n';
+    int print = 0, lift = 0, count = 0;
+    for (int i = 0; argv++ && (i < argc - 1); i++) {
+        if ((strlen((*argv)) > 2) && (**(argv) != '-')) {
+            if ((fp = fopen(*argv, "r")) == NULL) {
+                printf("s21_cat: %s: No such file or directory", *argv);
             } else {
-                printf("%s", text);
-            }
-        }
-    fclose (fp);
-
-}
-
-void AddDollar(int argc, char *argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-    char text[2048];
-    char doll[3] = "$";
-    while(!feof(fp)) {
-            fgets(text, 1000, fp);
-            strcat(text, doll);
-            printf("%s", text);
-        }
-    fclose (fp);
-}
-
-void EmptyString(int argc, char *argv[]) {
-    fp = fopen(argv[argc - 1], "r+");
-    // char text[2048];
-    char future_char = '\n';
-    while((future_char = fgetc(fp)) != EOF) {
-        while(!feof(fp)) {
-            if(fgetc(fp) == '\n' && future_char == '\n') {
-                while(future_char == '\n') {
-                    future_char = getc(fp);
+                while ((chr = getc(fp)) != EOF) {
+                    print = 1;
+                    if (opt.s) {
+                        EmptyString(chr, future_char, &print, &lift);
+                    }
+                    if (opt.n && !opt.b) {
+                        NumEveryString(&count, future_char);
+                    }
+                    if (opt.b) {
+                        NumNonEmptyString(chr, future_char, &count);
+                    }
+                    if (opt.t) {
+                        VisibleTab(chr, &print);
+                    }
+                    if (opt.e) {
+                        AddDollar(chr);
+                    }
+                    if (opt.v) {
+                        // InvisibleSymbols(chr, &print);
+                    }
+                    if (print) {
+                        putc(chr, stdout);
+                    }
+                    future_char = chr;
+                }
+                fclose(fp);
                 }
             }
         }
     }
+void EmptyString(char chr, char future_char, int *print, int *lift) {
+    if ((chr == '\n') && (future_char == '\n')) {
+        *lift += 1;
+    }
+    if (chr != '\n') {
+        *lift = 0;
+        *print = 1;
+    }
+    if (*lift > 1) {
+        *print = 0;
+    }
 }
 
+void NumEveryString(int *count, char future_char) {
+    // while(!feof(fp)) {
+    //         fgets(text, 1000, fp);
+    //         printf("%6d\t%s", *count++, text);
+    //     }
+    if (future_char == '\n') {
+        printf("%6d\t", *count++);
+    }
+}
+
+
+void NumNonEmptyString(char future_char, char chr, int *count) {
+    // while(!feof(fp)) {
+    //         fgets(text, 1000, fp);
+    //         if(strlen(text) > 1) {
+    //         printf("%6d\t%s", count++, text);
+    //         } else {
+    //             printf("%s", text);
+    //         }
+    //     }
+    if (chr != '\n' && future_char == '\n') {
+        printf("%6d\t", *count++);
+    }
+
+}
+
+void AddDollar(char chr) {
+    if (chr == '\n') {
+        printf("$");
+    }
+}
+
+void VisibleTab(char chr, int *print) {
+    if (chr == '\t') {
+        printf("^I");
+        *print = 0;
+    }
+}
+
+// void InvisibleSymbols(char chr, int *print) {
+
+// }
 
