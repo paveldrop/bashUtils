@@ -7,24 +7,67 @@
 
 int main(int argc, char* argv[]) {
     struct option_field opt;
+    FILE *fp;
+    char chr, future_char = '\n';
+    int PRINT, long_index, lift = 0, count = 0, total = 0;;
     StructToNull(&opt);
-    GetOptions(argc, argv, &opt);
-    if (argc > 1) FlagsForRun(argc, argv, opt);
+    while ((total = getopt_long(argc, argv, "beEstnv",
+                                long_options, &long_index)) != -1) {
+        FlagPut(total, &opt);
+    }
+    if (argc > 1) {
+        for (int i = 0; argv++ && (i < argc - 1); i++) {
+            if ((strlen((*argv)) > 2) && (**(argv) != '-')) {
+                if ((fp = fopen(*argv, "r")) == NULL) {
+                    printf("s21_cat: %s: No such file or directory", *argv);
+                } else {
+                    while ((chr = getc(fp)) != EOF) {
+                        PRINT = 1;
+                    if (opt.s) {
+                        EmptyString(chr, future_char, &PRINT, &lift);
+                    }
+                    if (opt.n && !opt.b) {
+                        NumEveryString(&count, future_char);
+                    }
+                    if (opt.b) {
+                        NumNonEmptyString(chr, future_char, &count);
+                    }
+                    if (opt.t) {
+                        VisibleTab(chr, &PRINT);
+                    }
+                    if (opt.e) {
+                        AddDollar(chr);
+                    }
+                    if (opt.v) {
+                        // InvisibleSymbols(chr, &PRINT);
+                    }
+                    if (PRINT) {
+                        putc(chr, stdout);
+                    }
+                    future_char = chr;
+                }
+                fclose(fp);
+                }
+            }
+        }
+    }
+
+    return 0;;
 
     return 0;
 }
 
 
-void GetOptions(int argc, char **argv, struct option_field *opt) {
-    // StructToNull(&opt);
-    // const char* short_options = "beEstn";
-    int long_index = 0;
-    int total = getopt_long(argc, argv, "beEstnv", long_options, &long_index);
+// void GetOptions(int argc, char **argv, struct option_field *opt) {
+//     // StructToNull(&opt);
+//     // const char* short_options = "beEstn";
+//     int long_index = 0;
+//     int total = getopt_long(argc, argv, "beEstnv", long_options, &long_index);
 
-    while (total != -1) {
-        FlagPut(total, opt);
-    }
-}
+//     while (total != -1) {
+//         FlagPut(total, opt);
+//     }
+// }
 void StructToNull(struct option_field *opt) {
     opt->b = 0;
     opt->e = 0;
@@ -56,45 +99,45 @@ void FlagPut(char total, struct option_field *opt) {
     }
 }
 
-void FlagsForRun(int argc, char **argv, struct option_field opt) {
-    FILE *fp;
-    char chr, future_char = '\n';
-    int print = 0, lift = 0, count = 0;
-    for (int i = 0; argv++ && (i < argc - 1); i++) {
-        if ((strlen((*argv)) > 2) && (**(argv) != '-')) {
-            if ((fp = fopen(*argv, "r")) == NULL) {
-                printf("s21_cat: %s: No such file or directory", *argv);
-            } else {
-                while ((chr = getc(fp)) != EOF) {
-                    print = 1;
-                    if (opt.s) {
-                        EmptyString(chr, future_char, &print, &lift);
-                    }
-                    if (opt.n && !opt.b) {
-                        NumEveryString(&count, future_char);
-                    }
-                    if (opt.b) {
-                        NumNonEmptyString(chr, future_char, &count);
-                    }
-                    if (opt.t) {
-                        VisibleTab(chr, &print);
-                    }
-                    if (opt.e) {
-                        AddDollar(chr);
-                    }
-                    if (opt.v) {
-                        // InvisibleSymbols(chr, &print);
-                    }
-                    if (print) {
-                        putc(chr, stdout);
-                    }
-                    future_char = chr;
-                }
-                fclose(fp);
-                }
-            }
-        }
-    }
+// void FlagsForRun(int argc, char **argv, struct option_field opt) {
+//     FILE *fp;
+//     char chr, future_char = '\n';
+//     int print = 0, lift = 0, count = 0;
+//     for (int i = 0; argv++ && (i < argc - 1); i++) {
+//         if ((strlen((*argv)) > 2) && (**(argv) != '-')) {
+//             if ((fp = fopen(*argv, "r")) == NULL) {
+//                 printf("s21_cat: %s: No such file or directory", *argv);
+//             } else {
+//                 while ((chr = getc(fp)) != EOF) {
+//                     print = 1;
+//                     if (opt.s) {
+//                         EmptyString(chr, future_char, &print, &lift);
+//                     }
+//                     if (opt.n && !opt.b) {
+//                         NumEveryString(&count, future_char);
+//                     }
+//                     if (opt.b) {
+//                         NumNonEmptyString(chr, future_char, &count);
+//                     }
+//                     if (opt.t) {
+//                         VisibleTab(chr, &print);
+//                     }
+//                     if (opt.e) {
+//                         AddDollar(chr);
+//                     }
+//                     if (opt.v) {
+//                         // InvisibleSymbols(chr, &print);
+//                     }
+//                     if (print) {
+//                         putc(chr, stdout);
+//                     }
+//                     future_char = chr;
+//                 }
+//                 fclose(fp);
+//                 }
+//             }
+//         }
+//     }
 void EmptyString(char chr, char future_char, int *print, int *lift) {
     if ((chr == '\n') && (future_char == '\n')) {
         *lift += 1;
@@ -114,7 +157,7 @@ void NumEveryString(int *count, char future_char) {
     //         printf("%6d\t%s", *count++, text);
     //     }
     if (future_char == '\n') {
-        printf("%6d\t", *count++);
+        printf("%6d\t", *count += 1);
     }
 }
 
@@ -129,7 +172,7 @@ void NumNonEmptyString(char future_char, char chr, int *count) {
     //         }
     //     }
     if (chr != '\n' && future_char == '\n') {
-        printf("%6d\t", *count++);
+        printf("%6d\t", *count += 1);
     }
 
 }
