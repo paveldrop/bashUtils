@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     struct option_field opt;
     FILE *fp;
     char chr, future_char = '\n';
-    int print, long_index, lift = 0, count = 0, total = 0;;
+    int print, long_index, lift = 0, count = 0, total = 0;
     StructToNull(&opt);
     while ((total = getopt_long(argc, argv, "beEstnv",
                                 long_options, &long_index)) != -1) {
@@ -118,7 +118,7 @@ void EmptyString(char chr, int *count, char future_char, int *print, int *lift, 
     }
 
     // если следующий чар переносится
-    if (*lift > 1 && opt.n) {
+    if (*lift > 1) {
         *print = 0;
     }
 }
