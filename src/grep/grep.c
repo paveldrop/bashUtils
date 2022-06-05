@@ -4,7 +4,9 @@
    -l  Выдает только имена файлов, содержащих сопоставившиеся строки, по одному в строке. Если образец найден в нескольких строках файла, имя файла не повторяется.
    -n  Выдает перед каждой строкой ее номер в файле (строки нумеруются с 1).
    -e  example grep -e pattern1 -e pattern2 -e pattern3
-   grep [options] template [file_name]*/
+   grep [options] template [file_name]
+   использование regex.h и pcre
+   */
 
 
 #include "s21_grep.h"
@@ -15,9 +17,11 @@ int main(int argc, char* argv[]) {
     struct option_field opt;
     FILE *fp;
     char chr, future_char = '\n';
+    // char *textvar = {'\0'};
+    // if ((strlen((*argv)) > 2) && (**argv) != '-') textvar = *argv;
     int print, long_index, lift = 0, count = 0, total = 0;
     StructToNull(&opt);
-    while ((total = getopt_long(argc, argv, "beEstnv",
+    while ((total = getopt_long(argc, argv, "eivcln",
                                 long_options, &long_index)) != -1) {
         FlagPut(total, &opt);
     }
