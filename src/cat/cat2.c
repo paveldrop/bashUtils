@@ -1,9 +1,5 @@
 #include "s21_cat.h"
-
-
-
-// void InvisibleSymbols(char chr, int *print);
-
+#define  _GNU_SOURCE
 
 int main(int argc, char* argv[]) {
     struct option_field opt;
@@ -58,17 +54,6 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-
-// void GetOptions(int argc, char **argv, struct option_field *opt) {
-//     // StructToNull(&opt);
-//     // const char* short_options = "beEstn";
-//     int long_index = 0;
-//     int total = getopt_long(argc, argv, "beEstnv", long_options, &long_index);
-
-//     while (total != -1) {
-//         FlagPut(total, opt);
-//     }
-// }
 void StructToNull(struct option_field *opt) {
     opt->b = 0;
     opt->e = 0;

@@ -14,9 +14,11 @@
 
 
 int main(int argc, char* argv[]) {
+    // строка для шаблона
+    char SEARCH_STRING[8192];
     struct option_field opt;
     FILE *fp;
-    char chr, future_char = '\n';
+    // char chr, future_char = '\n';
     // char *textvar = {'\0'};
     // if ((strlen((*argv)) > 2) && (**argv) != '-') textvar = *argv;
     int print, long_index, lift = 0, count = 0, total = 0;
