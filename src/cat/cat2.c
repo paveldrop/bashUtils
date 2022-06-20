@@ -1,5 +1,7 @@
 #include "s21_cat.h"
-#define  _GNU_SOURCE
+
+
+/* -s -e and -n -s dont worked */
 
 int main(int argc, char* argv[]) {
     struct option_field opt;
@@ -20,12 +22,14 @@ int main(int argc, char* argv[]) {
                     while ((chr = getc(fp)) != EOF) {
                         print = 1;
                     if (opt.s) {
-                        EmptyString(chr, &count, future_char,  &print, &lift, opt);
-                        
+                        EmptyString(chr, future_char, &print, &lift);
                     }
-                    if (opt.n && !opt.b && !opt.s) {
+                    if (opt.n && !opt.b /* && !opt.s */) {
                         NumEveryString(&count, future_char);
                     }
+                    // if (opt.n && opt.s) {
+                    //     EmptyAndNumString(*fp);
+                    // }
                     if (opt.b) {
                         NumNonEmptyString(chr, future_char, &count);
                     }
@@ -86,7 +90,7 @@ void FlagPut(char total, struct option_field *opt) {
 }
 
 
-void EmptyString(char chr, int *count, char future_char, int *print, int *lift, struct option_field opt) {
+void EmptyString(char chr, char future_char, int *print, int *lift) {
     
     // если следующий чар тоже перенос строки
     if ((chr == '\n') && (future_char == '\n')) {
@@ -97,9 +101,9 @@ void EmptyString(char chr, int *count, char future_char, int *print, int *lift, 
     if (chr != '\n') {
         *lift = 0;
         *print = 1;
-        if (opt.n && future_char == '\n') {
-            printf("%6d\t", *count += 1);
-        }
+        // if (opt.n && future_char == '\n') {
+        //     printf("%6d\t", *count += 1);
+        // }
     }
 
     // если следующий чар переносится
@@ -129,7 +133,7 @@ void NumNonEmptyString(char future_char, char chr, int *count) {
     //         }
     //     }
     if (chr == '\n' && future_char != '\n') {
-        printf("%6d  ", *count += 1);
+        printf("%6d\t", *count += 1);
     }
 
 }
@@ -162,3 +166,15 @@ void InvisibleSymbols(int chr, int *print) {
     }
 }
 
+// void EmptyAndNumString(FILE *fp) {
+//     int count = 0;
+//     char text[1024];
+//     while(!feof(fp)) {
+//             fgets(text, 1000, fp);
+//             if(strlen(text) > 1) {
+//                 printf("%6d\t%s", count++, text);
+//             } else {
+//                 printf("%s", text);
+//             }
+//         }
+// }

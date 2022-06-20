@@ -27,11 +27,12 @@ void StructToNull(struct option_field *opt);
 // void GetOptions(int argc, char **argv, char future_char, struct option_field *opt, char chr, int print, FILE*fp);
 void FlagsForRun(int argc, char **argv, struct option_field opt);
 void FlagPut(char total, struct option_field *opt);
-void EmptyString(char chr, int *count, char future_char, int *print, int *lift, struct option_field opt);
+void EmptyString(char chr, char future_char, int *print, int *lift);
 void NumEveryString(int *count, char future_char);
 void NumNonEmptyString(char future_char, char chr, int *count);
 void AddDollar(char chr);
 void VisibleTab(char chr, int *print);
 void InvisibleSymbols(int chr, int *print);
+// void EmptyAndNumString(FILE *fp);
 
 #endif // SRC_CAT_S21_CAT_H_s
