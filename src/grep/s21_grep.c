@@ -26,14 +26,17 @@ int main(int argc, char* argv[]) {
     }
 
     if (!opt.e) {
+        printf("%d", optind);
         strcat(pat, argv[optind]);
         optind++;
     }
 
     while (optind < argc) {
+        printf("%d", optind);
         FileOpen(argc, argv, opt, pat);
         optind++;
     }
+    return 0;
 }
 
 void StructToNull(struct option_field *opt) {
@@ -70,6 +73,10 @@ void FlagPut(int argc, char**argv, struct option_field *opt, char *pat, struct o
             opt->n = 1;
             break;
         default:
+            // printf("\n%d", opt->i);
+            printf("%s\n", argv[optind]);
+            printf("%s\n", *argv);
+            printf("%d\n", opt->i);
             fprintf(stderr, "usage: grep [e:ivcln] [file ...]\n");
             exit(1);
         }
@@ -108,7 +115,7 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, struct option_field
     } else {
         regcomp(reg, pat, 0001);  // REG_EXTENDED 0001
     }
-    while ((getline(&str, &len, fp) != -1)) {
+    while (getline(&str, &len, fp) != -1) {
         if (optind != argc - 1) {
             opt->cnt_file = 1;
         }
