@@ -2,7 +2,7 @@
 
 SUCCESS=0
 FAIL=0
-FILE_NAME="test.txt"
+FILE_NAME="tests/test.txt"
 DIFF_OUTPUT=""
 A=0
 
