@@ -11,72 +11,81 @@
 
 
 #include "s21_grep.h"
+#include <stdio.h>
 
 
 int main(int argc, char* argv[]) {
-    char pat[2048];
-    struct option_field opt;
-    struct option l_options;
-    StructToNull(&opt);
-    FlagPut(argc, argv, &opt, pat, l_options);
-    if (opt.l || opt.c) {
-        opt.i = 0;
-        opt.n = 0;
-        opt.v = 0;
+    // pattern
+    char pat[2048] = {0};
+    opt option_field;
+    // struct option l_options;
+    StructToNull(&option_field);
+
+//
+    // printf("\n i -%d", option_field.i);
+    // printf("\n v -%d", option_field.v);
+    // printf("\n c -%d", option_field.c);
+    // printf("\n l -%d", option_field.l);
+    // printf("\n n -%d", option_field.n);
+    // printf("\n e -%d", option_field.e);
+//
+    FlagPut(argc, argv, &option_field, pat);
+    // printf("\n optind - %d\n argc - %d", optind, argc);
+    if (option_field.l || option_field.c) {
+        option_field.i = 0;
+        option_field.n = 0;
+        option_field.v = 0;
     }
 
-    if (!opt.e) {
-        printf("%d", optind);
+    if (!option_field.e) {
         strcat(pat, argv[optind]);
         optind++;
+        // printf("iam here");
     }
 
     while (optind < argc) {
-        printf("%d", optind);
-        FileOpen(argc, argv, opt, pat);
+        // printf("\n optind - %d", optind);
+        FileOpen(argc, argv, &option_field, pat);
+        // printf("iam here after reader");
         optind++;
     }
     return 0;
 }
 
-void StructToNull(struct option_field *opt) {
-    opt->e = 0;
-    opt->i = 0;
-    opt->v = 0;
-    opt->c = 0;
-    opt->l = 0;
-    opt->n = 0;
+void StructToNull(opt *option_field) {
+    option_field->e = 0;
+    option_field->i = 0;
+    option_field->v = 0;
+    option_field->c = 0;
+    option_field->l = 0;
+    option_field->n = 0;
 }
 
-void FlagPut(int argc, char**argv, struct option_field *opt, char *pat, struct option) {
+void FlagPut(int argc, char**argv, opt *option_field, char *pat) {
     int kolvo = 0;
-    int options, long_index = 0;
-    while ((options =  getopt_long(argc, argv, "e:inclv", long_options, &long_index)) != 0) {
+    int options = 0;
+    while ((options = getopt_long(argc, argv, "e:inclv", NULL, NULL)) != -1) {
         switch (options) {
         case 'e':
             Pat_E(&kolvo, pat, optarg);
-            opt->e = 1;
+            option_field->e = 1;
             break;
         case 'i':
-            opt->i = 1;
+            option_field->i = 1;
             break;
         case 'v':
-            opt->v = 1;
+            option_field->v = 1;
             break;
         case 'c':
-            opt->c = 1;
+            option_field->c = 1;
             break;
         case 'l':
-            opt->l = 1;
+            option_field->l = 1;
             break;
         case 'n':
-            opt->n = 1;
+            option_field->n = 1;
             break;
         default:
-            // printf("\n%d", opt->i);
-            printf("%s\n", argv[optind]);
-            printf("%s\n", *argv);
-            printf("%d\n", opt->i);
             fprintf(stderr, "usage: grep [e:ivcln] [file ...]\n");
             exit(1);
         }
@@ -92,17 +101,18 @@ void Pat_E(int *kolvo, char *pat, char *optarg) {
     strcat(pat, optarg);
 }
 
-void FileOpen(char argc, char**argv, struct option_field opt, char *pat) {
+void FileOpen(char argc, char**argv, opt *option_field, char *pat) {
     FILE *fp = fopen(argv[optind], "r");
     if (fp) {
-        UseOptions(argc, argv, fp, pat, &opt);
+        UseOptions(argc, argv, fp, pat, option_field);
+        // printf("\nuseopt");
         fclose(fp);
     } else {
         fprintf(stderr, "s21_grep: %s: No such file or directory\n", argv[optind]);
     }
 }
 
-void UseOptions(char argc, char **argv, FILE *fp, char *pat, struct option_field *opt) {
+void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field) {
     regex_t reg[2048];
     char *str = NULL;
     size_t len = 0;
@@ -110,32 +120,32 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, struct option_field
     int counter = 0;
     int match = 0;
 /* option -i */
-    if (opt->i) {
+    if (option_field->i) {
         regcomp(reg, pat, 0003);  // REG_ICASE 0002 + REG_EXTENDED 0001
     } else {
         regcomp(reg, pat, 0001);  // REG_EXTENDED 0001
     }
     while (getline(&str, &len, fp) != -1) {
         if (optind != argc - 1) {
-            opt->cnt_file = 1;
+            option_field->cnt_file = 1;
         }
         int err = 0;
         err = regexec(reg, str, 0, NULL, 0);
 /* option -v */
         if (err == 1) {
-            if (opt->v) {
-                if (opt->cnt_file) {
-                    printf("%s:", argv[optind]);
-                }
+            if (option_field->v) {
+                // if (option_field->cnt_file) {
+                //     printf("%s:", argv[optind]);
+                // }
                 printf("%s", str);
             }
         }
 /* option -n */
-        if (err == 0 && !opt->v && !opt->l && !opt->c) {
-            if (opt->cnt_file > 1) {
-                printf("%s:", argv[optind]);
-            }
-            if (opt->n) {
+        if (err == 0 && !option_field->v && !option_field->l && !option_field->c) {
+            // if (option_field->cnt_file > 1) {
+            //     printf("%s:", argv[optind]);
+            // }
+            if (option_field->n) {
                     printf("%d:", str_count);
                 }
             printf("%s", str);
@@ -143,7 +153,7 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, struct option_field
 /* option -l */
         if (err == 0 && counter == 0) {
             counter++;
-            if (opt->l) {
+            if (option_field->l) {
                 printf("%s\n", argv[optind]);
             }
         }
@@ -153,10 +163,10 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, struct option_field
         str_count++;
     }
 /* option -c */
-    if (opt->c) {
-        if (opt->cnt_file) {
-            printf("%s:", argv[optind]);
-        }
+    if (option_field->c) {
+        // if (option_field->cnt_file) {
+        //     printf("%s:", argv[optind]);
+        // }
         printf("%d\n", match);
     }
     regfree(reg);
