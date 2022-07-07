@@ -3,7 +3,7 @@
 COUNTER_SUCCESS=0
 COUNTER_FAIL=0
 DIFF_RES=""
-TEST_FILE="test.txt"
+TEST_FILE="tests/test.txt"
 TEST_WORD="qwe"
 
 cat /dev/null > log.txt

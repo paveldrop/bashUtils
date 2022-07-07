@@ -10,7 +10,7 @@ s21_grep:
 	$(CC) $(CFLAGS) -c $(SOURSES) -o $(OBJECTS)
 	$(CC) $(OBJECTS) -o s21_grep
 test: s21_grep
-	tests/grep.sh
+	./grep.sh
 check: s21_grep
 	@cppcheck *.h *.c
 	@cp ../../materials/linters/CPPLINT.cfg ./
