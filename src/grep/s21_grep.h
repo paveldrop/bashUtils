@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct option_field{
+typedef struct option_field {
     int e;
     int i;
     int v;
@@ -35,4 +35,4 @@ void FileOpen(char argc, char**argv, opt *option_field, char *pat);
 void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field);
 
 
-#endif // SRC_GREP_S21_GREP_H_
+#endif  // SRC_GREP_S21_GREP_H_
