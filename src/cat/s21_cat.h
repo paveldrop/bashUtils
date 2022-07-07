@@ -24,7 +24,6 @@ static struct option long_options[] = {
 
 void GetOptions(int argc, char *argv[], struct option_field *opt);
 void StructToNull(struct option_field *opt);
-// void GetOptions(int argc, char **argv, char future_char, struct option_field *opt, char chr, int print, FILE*fp);
 void FlagsForRun(int argc, char **argv, struct option_field opt);
 void FlagPut(char total, struct option_field *opt);
 void EmptyString(char chr, char future_char, int *print, int *lift);
@@ -35,4 +34,4 @@ void VisibleTab(char chr, int *print);
 void InvisibleSymbols(int chr, int *print);
 // void EmptyAndNumString(FILE *fp);
 
-#endif // SRC_CAT_S21_CAT_H_s
+#endif  // SRC_CAT_S21_CAT_H_

@@ -91,7 +91,6 @@ void FlagPut(char total, struct option_field *opt) {
 
 
 void EmptyString(char chr, char future_char, int *print, int *lift) {
-    
     // если следующий чар тоже перенос строки
     if ((chr == '\n') && (future_char == '\n')) {
         *lift += 1;
@@ -113,10 +112,6 @@ void EmptyString(char chr, char future_char, int *print, int *lift) {
 }
 
 void NumEveryString(int *count, char future_char) {
-    // while(!feof(fp)) {
-    //         fgets(text, 1000, fp);
-    //         printf("%6d\t%s", *count++, text);
-    //     }
     if (future_char == '\n') {
         printf("%6d\t", *count += 1);
     }
@@ -124,18 +119,9 @@ void NumEveryString(int *count, char future_char) {
 
 
 void NumNonEmptyString(char future_char, char chr, int *count) {
-    // while(!feof(fp)) {
-    //         fgets(text, 1000, fp);
-    //         if(strlen(text) > 1) {
-    //         printf("%6d\t%s", count++, text);
-    //         } else {
-    //             printf("%s", text);
-    //         }
-    //     }
     if (chr == '\n' && future_char != '\n') {
         printf("%6d\t", *count += 1);
     }
-
 }
 
 void AddDollar(char chr) {
@@ -165,16 +151,3 @@ void InvisibleSymbols(int chr, int *print) {
         *print = 0;
     }
 }
-
-// void EmptyAndNumString(FILE *fp) {
-//     int count = 0;
-//     char text[1024];
-//     while(!feof(fp)) {
-//             fgets(text, 1000, fp);
-//             if(strlen(text) > 1) {
-//                 printf("%6d\t%s", count++, text);
-//             } else {
-//                 printf("%s", text);
-//             }
-//         }
-// }
