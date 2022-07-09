@@ -15,7 +15,7 @@ test: s21_grep
 # 	@cppcheck *.h *.c
 # 	@cp ../../materials/linters/CPPLINT.cfg ./
 # 	@python3 ../../materials/linters/cpplint.py --extension=c *.c *.h
-# 	@valgrind --leak-check=full ./s21_grep -v test.txt
+# 	@valgrind --leak-check=full ./s21_grep -v tests/test.txt
 # 	@rm CPPLINT.cfg
 clean:
 	rm -rf ./*.o ./a.out ./CPPLINT* s21_grep *.dSYM

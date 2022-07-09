@@ -116,7 +116,7 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field) 
         }
         int err = 0;
         err = regexec(reg, str, 0, NULL, 0);
-/* option -v */
+/* option -v EOF mayby? */
         if (err == 1) {
             if (option_field->v) {
                 printf("%s", str);

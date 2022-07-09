@@ -1,21 +1,32 @@
-1:qwerty
-2:uoip
-
-3:blabla
-
-
-4:terere
--e qfwrgwef
-
-
-AVSdfssfd
-
-
-5          qwer
-QwErTyUiOpls
-
-
-test.txt
-
-tyuiop
+     1	Safsaf
+     2	sf
+     3	asd
+     4	
+     5	
+     6	asdg
+     7	
+     8	
+     9	
+    10	
+    11	
+    12	
+    13	dag
+    14	asddg
+    15	d
+    16	
+    17	
+    18	
+    23	
+    24	sg
+    25	sfg
+    26	sf
+    27	
+    28	
+    29	1
+    30	
+    31	gsa
+    32	gsaag
+    33	
+    34	gsaad
+    35	gfdfag g as g a g ag  gas gd
 
