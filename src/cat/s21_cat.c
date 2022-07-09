@@ -24,12 +24,9 @@ int main(int argc, char* argv[]) {
                     if (opt.s) {
                         EmptyString(chr, future_char, &print, &lift);
                     }
-                    if (opt.n && !opt.b /* && !opt.s */) {
+                    if (opt.n && !opt.b) {
                         NumEveryString(&count, future_char);
                     }
-                    // if (opt.n && opt.s) {
-                    //     EmptyAndNumString(*fp);
-                    // }
                     if (opt.b) {
                         NumNonEmptyString(chr, future_char, &count);
                     }
@@ -91,21 +88,18 @@ void FlagPut(char total, struct option_field *opt) {
 
 
 void EmptyString(char chr, char future_char, int *print, int *lift) {
-    // если следующий чар тоже перенос строки
+    // if next char \n - "Enter"
     if ((chr == '\n') && (future_char == '\n')) {
         *lift += 1;
     }
 
-    // печатаем если чар не перенос строки
+    // print char if char not \n
     if (chr != '\n') {
         *lift = 0;
         *print = 1;
-        // if (opt.n && future_char == '\n') {
-        //     printf("%6d\t", *count += 1);
-        // }
     }
 
-    // если следующий чар переносится
+    // if next char "Enter"
     if (*lift > 1) {
         *print = 0;
     }
