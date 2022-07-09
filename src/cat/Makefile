@@ -19,7 +19,7 @@ test: s21_cat
 # 	@valgrind --leak-check=full ./s21_cat tests/123.txt
 # 	@rm CPPLINT.cfg
 clean:
-	rm -rf ./*.o ./a.out ./CPPLINT* s21_cat
+	rm -rf ./*.o ./a.out ./CPPLINT* s21_cat *.dSYM
 rebuild:
 	$(MAKE) clean
 	$(MAKE) all

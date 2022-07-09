@@ -18,7 +18,7 @@ test: s21_grep
 # 	@valgrind --leak-check=full ./s21_grep -v test.txt
 # 	@rm CPPLINT.cfg
 clean:
-	rm -rf ./*.o ./a.out ./CPPLINT* s21_grep
+	rm -rf ./*.o ./a.out ./CPPLINT* s21_grep *.dSYM
 rebuild:
 	$(MAKE) clean
 	$(MAKE) all

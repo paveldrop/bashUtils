@@ -11,42 +11,29 @@
 
 
 #include "s21_grep.h"
-#include <stdio.h>
-
 
 int main(int argc, char* argv[]) {
     // pattern
     char pat[2048] = {0};
     opt option_field;
-    // struct option l_options;
+    // struct = 0
     StructToNull(&option_field);
-
-//
-    // printf("\n i -%d", option_field.i);
-    // printf("\n v -%d", option_field.v);
-    // printf("\n c -%d", option_field.c);
-    // printf("\n l -%d", option_field.l);
-    // printf("\n n -%d", option_field.n);
-    // printf("\n e -%d", option_field.e);
-//
+    // put flag 1 or 0
     FlagPut(argc, argv, &option_field, pat);
-    // printf("\n optind - %d\n argc - %d", optind, argc);
+
     if (option_field.l || option_field.c) {
         option_field.i = 0;
         option_field.n = 0;
         option_field.v = 0;
     }
-
+    // if "e" option empty
     if (!option_field.e) {
         strcat(pat, argv[optind]);
         optind++;
-        // printf("iam here");
     }
-
+    // every arg and total argc
     while (optind < argc) {
-        // printf("\n optind - %d", optind);
         FileOpen(argc, argv, &option_field, pat);
-        // printf("iam here after reader");
         optind++;
     }
     return 0;
@@ -92,7 +79,6 @@ void FlagPut(int argc, char**argv, opt *option_field, char *pat) {
     }
 }
 
-
 void Pat_E(int *kolvo, char *pat, char *optarg) {
     if (*kolvo > 0) {
         strcat(pat, "|");
@@ -105,7 +91,6 @@ void FileOpen(char argc, char**argv, opt *option_field, char *pat) {
     FILE *fp = fopen(argv[optind], "r");
     if (fp) {
         UseOptions(argc, argv, fp, pat, option_field);
-        // printf("\nuseopt");
         fclose(fp);
     } else {
         fprintf(stderr, "s21_grep: %s: No such file or directory\n", argv[optind]);
@@ -121,9 +106,9 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field) 
     int match = 0;
 /* option -i */
     if (option_field->i) {
-        regcomp(reg, pat, 0003);  // REG_ICASE 0002 + REG_EXTENDED 0001
+        regcomp(reg, pat, 0003);  // pointer compiler regex, my_pattern, REG_ICASE 0002 + REG_EXTENDED 0001
     } else {
-        regcomp(reg, pat, 0001);  // REG_EXTENDED 0001
+        regcomp(reg, pat, 0001);  // pointer compiler regex, my_pattern, REG_EXTENDED 0001
     }
     while (getline(&str, &len, fp) != -1) {
         if (optind != argc - 1) {
@@ -134,17 +119,11 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field) 
 /* option -v */
         if (err == 1) {
             if (option_field->v) {
-                // if (option_field->cnt_file) {
-                //     printf("%s:", argv[optind]);
-                // }
                 printf("%s", str);
             }
         }
 /* option -n */
         if (err == 0 && !option_field->v && !option_field->l && !option_field->c) {
-            // if (option_field->cnt_file > 1) {
-            //     printf("%s:", argv[optind]);
-            // }
             if (option_field->n) {
                     printf("%d:", str_count);
                 }
@@ -164,9 +143,6 @@ void UseOptions(char argc, char **argv, FILE *fp, char *pat, opt *option_field) 
     }
 /* option -c */
     if (option_field->c) {
-        // if (option_field->cnt_file) {
-        //     printf("%s:", argv[optind]);
-        // }
         printf("%d\n", match);
     }
     regfree(reg);
